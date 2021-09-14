@@ -33,6 +33,11 @@ func (g Genmap) getField(path string) interface{} {
 		case map[string]interface{}:
 			a = v
 		default:
+			myMap, ok := x.(map[string]interface{})
+			if ok {
+				a = myMap
+				continue
+			}
 			return nil
 		}
 	}
