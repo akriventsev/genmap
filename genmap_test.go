@@ -28,3 +28,25 @@ func TestGenmap_Set2(t *testing.T) {
 		t.FailNow()
 	}
 }
+
+type TestType map[string]interface{}
+
+func (t TestType) Map() map[string]interface{} {
+	return t
+}
+
+func TestGenmap_Set3(t *testing.T) {
+	g := FromMap(map[string]interface{}{
+		"payload": TestType{
+			"value": "Karamba",
+		},
+	})
+	g.Set("payload.level1.level2", "Karamba2")
+
+	if g.GetString("payload.value") != "Karamba" {
+		t.FailNow()
+	}
+	if g.GetString("payload.level1.level2") != "Karamba2" {
+		t.FailNow()
+	}
+}

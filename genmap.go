@@ -7,6 +7,10 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
+type IMapper interface {
+	Map() map[string]interface{}
+}
+
 type Genmap struct {
 	payload map[string]interface{}
 }
@@ -32,6 +36,8 @@ func (g Genmap) getField(path string) interface{} {
 		switch v := x.(type) {
 		case map[string]interface{}:
 			a = v
+		case IMapper:
+			a = v.Map()
 		default:
 			myMap, ok := x.(map[string]interface{})
 			if ok {
@@ -167,6 +173,8 @@ func (g *Genmap) Set(path string, value interface{}) {
 				a[l] = value
 			}
 			a = a[l].(map[string]interface{})
+		case IMapper:
+			a = x.(IMapper).Map()
 		case nil:
 			if i == len(levels)-1 {
 				a[l] = value
